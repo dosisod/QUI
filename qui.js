@@ -1,6 +1,9 @@
 class QUIrenderer {
 	constructor(url) {
-		fetch(url).then(e=>e.text()).then(e=>JSON.parse(e))
-		//will change this
+		//synchronous req is deprecated, but i need to save JSON as var
+		var tmp=new XMLHttpRequest();
+		tmp.open("GET",url, false)
+		tmp.send("")
+		this.board=JSON.parse(tmp.responseText)
 	}
 }

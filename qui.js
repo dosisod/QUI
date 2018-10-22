@@ -13,9 +13,17 @@ class QUIrenderer {
 		this.sizey=this.screeny/this.board["y"]
 
 		this.canv=document.getElementById("c")
-		this.disp=canv.getContext("2d")
+		this.disp=this.canv.getContext("2d")
 
-		disp.canvas.width=this.screenx //resizes canvas
-		disp.canvas.height=this.screeny
+		this.disp.canvas.width=this.screenx //resizes canvas
+		this.disp.canvas.height=this.screeny
+	}
+	init() {
+		this.disp.fillStyle=this.board["bg"]
+		this.disp.fillRect(0,0,this.screenx,this.screeny)
+
+		for(var i of this.board["board"]) {
+			console.table(i)
+		}
 	}
 }

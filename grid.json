@@ -1,13 +1,15 @@
 {
 	"x":4,
 	"y":4,
-	"bg":"#000",
+	"bg":{"type":"color","value":"#000"},
 	"board": [
 		{"box":[0,0,1,1],
 		"color":"#00f",
-		"text":"HELLO"},
+		"text":"HELLO",
+		"action":"alert('HELLO')"},
 		{"box":[1,0,2,1],
 		"color":"#0f0",
-		"text":"HEY"}
+		"text":"HEY",
+		"action":"alert('HEY')"}
 	]
 }

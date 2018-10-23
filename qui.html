@@ -1,0 +1,39 @@
+<head>
+
+<script src="jquery.js"></script>
+<script src="qui.js"></script>
+
+</head>
+<body>
+
+<canvas id="c">
+</canvas>
+
+<script>
+qq=new QUIrenderer("grid.json")
+qq.init()
+</script>
+
+</body>
+<style>
+* {
+	font-family: monospace;
+	margin: 0;
+	padding: 0;
+}
+canvas {
+	image-rendering: pixelated;
+}
+html {
+	width: 100%;
+	height: 100%;
+}
+body {
+	width: 100%;
+	height: 100%;
+}
+#c {
+	width: 100%;
+	height: 100%;
+}
+</style>

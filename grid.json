@@ -3,13 +3,17 @@
 	"y":4,
 	"bg":{"type":"color","value":"#000"},
 	"board": [
-		{"box":[0,0,2,2],
-		"color":"#00f",
+		{"box":[0,0,3,1],
+		"color":"#f00",
 		"text":"HELLO",
-		"action":"alert('HELLO')"},
-		{"box":[2,0,3,2],
-		"color":"#0f0",
+		"action":"alert('RED')"},
+		{"box":[1,1,1,1],
+		"color":"#fff",
 		"text":"HEY",
-		"action":"alert('HEY')"}
+		"action":"alert('WHITE')"},
+		{"box":[1,2,2,1],
+		"color":"#aaa",
+		"text":"HEY",
+		"action":"alert('GRAY')"}
 	]
 }

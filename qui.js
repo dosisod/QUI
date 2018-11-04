@@ -49,10 +49,8 @@ class QUIrenderer {
 	clicked() {
 		var tempx=~~(this.mousex/this.sizex)
 		var tempy=~~(this.mousey/this.sizey)
-		console.log(tempx,tempy)
-		//alert("HERE I:"+j+" J:"+j)
 		for (var k of this.board["board"]) {
-			if (tempx>=k["box"][0]&&tempx<=k["box"][2]&&tempy<=k["box"][1]&&tempy<=k["box"][3]) {
+			if (tempx>=k["box"][0]&&tempx<k["box"][0]+k["box"][2]&&tempy>=k["box"][1]&&tempy<k["box"][1]+k["box"][3]) {
 				this.action(k["action"])
 				//return k;
 			}

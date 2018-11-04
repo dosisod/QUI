@@ -15,13 +15,19 @@ class QUIrenderer {
 		this.canv=document.getElementById("c") //gets canvas and makes disp obj for displaying boxes etc
 		this.disp=this.canv.getContext("2d")
 
-		this.canv.addEventListener('click', this.mouse, false) //listens on canv obj for mouse clicks
+		this.mouse=function(e){
+			console.log(e)
+			console.log(this.screenx)
+		}
+
+		this.mouseh=this.mouse.bind(this) //mouse handler
+		this.canv.addEventListener("click", this.mouseh, false)
 
 		this.disp.canvas.width=this.screenx //resizes canvas
 		this.disp.canvas.height=this.screeny
-	}
-	mouse() { //figures out what box was clicked on based off of mouse pos
-		//
+
+		this.mousex=0
+		this.mousey=0
 	}
 	init() { //loads the board to the screen
 		if (this.board["bg"]["type"]=="color")
@@ -40,7 +46,7 @@ class QUIrenderer {
 		return(tmp())
 	}
 	grid(box) { //returns cords for grid based on grid size and screen size
-		alert([box[0]*this.screenx,box[1]*this.screeny,box[2]*this.screenx,box[3]*this.screeny])
+		//alert([box[0]*this.screenx,box[1]*this.screeny,box[2]*this.screenx,box[3]*this.screeny])
 		return [box[0]*this.sizex,box[1]*this.sizey,box[2]*this.sizex,box[3]*this.sizey]
 	}
 }

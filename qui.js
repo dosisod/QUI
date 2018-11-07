@@ -1,10 +1,15 @@
 class QUIrenderer {
-	constructor(url) {
+	constructor(data, json=false) {
 		//synchronous req is deprecated, but i need to save JSON as var
-		var tmp=new XMLHttpRequest();
-		tmp.open("GET",url, false)
-		tmp.send("")
-		this.board=JSON.parse(tmp.responseText)
+		if (!json) {
+			var tmp=new XMLHttpRequest();
+			tmp.open("GET",data, false)
+			tmp.send("")
+			this.board=JSON.parse(tmp.responseText)
+		}
+		else {
+			this.board=JSON.parse(data)
+		}
 
 		this.screenx=window.innerWidth //gets full window size
 		this.screeny=window.innerHeight

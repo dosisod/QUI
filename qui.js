@@ -1,14 +1,14 @@
 class QUIrenderer {
-	constructor(data, json=false) {
-		//synchronous req is deprecated, but i need to save JSON as var
-		if (!json) {
+	constructor({url=false, str=false, json=false}) {
+		//console.log(url,str,json)
+		if (str) { this.board=JSON.parse(str) }
+		else if (json) { this.board=json }
+		else {
+			//synchronous req is deprecated, but i need to save JSON as var
 			var tmp=new XMLHttpRequest();
-			tmp.open("GET",data, false)
+			tmp.open("GET",url, false)
 			tmp.send("")
 			this.board=JSON.parse(tmp.responseText)
-		}
-		else {
-			this.board=JSON.parse(data)
 		}
 
 		this.screenx=window.innerWidth //gets full window size
@@ -46,7 +46,7 @@ class QUIrenderer {
 		}
 	}
 	rect(color, box) { //draws box of certain color at given pos
-		console.log(color, box)
+		//console.log(color, box)
 		this.disp.fillStyle=color
 		this.disp.fillRect(box[0], box[1], box[2], box[3])
 	}

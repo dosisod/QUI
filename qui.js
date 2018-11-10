@@ -39,6 +39,10 @@ class QUIrenderer {
 		if (this.board["bg"]["type"]=="color") {
 			this.rect(this.board["bg"]["value"], [0,0,this.screenx,this.screeny]) //draws background
 		}
+		else if (this.board["bg"]["type"]=="img") {
+			//this.rect(this.board["bg"]["value"], [0,0,this.screenx,this.screeny]) //draws background
+			this.img(this.board["bg"]["value"], [0,0,this.screenx,this.screeny]) //draws background
+		}
 
 		for(var i of this.board["board"]) { //for each box in the board:
 			this.rect(i["color"], this.grid(i["box"])) //draw outline
@@ -49,6 +53,18 @@ class QUIrenderer {
 		//console.log(color, box)
 		this.disp.fillStyle=color
 		this.disp.fillRect(box[0], box[1], box[2], box[3])
+	}
+	img(url) { //draws img background
+		var tmpimg=new Image()
+		tmpimg.src=url
+
+		tmpimg.onload=this.imgh(tmpimg)
+	}
+	imgh(imgobj) { //img handler
+		console.log(imgobj)
+		var pattern=this.disp.createPattern(imgobj, "repeat")
+		this.disp.fillStyle=pattern
+		this.disp.fillRect(0, 0, this.screenx, this.screeny)
 	}
 	text(str, box) { //renders text at given pos
 		this.disp.font="48px monospace"
@@ -64,7 +80,6 @@ class QUIrenderer {
 		var tempy=~~(this.mousey/this.sizey)
 		for (var k of this.board["board"]) {
 			if (tempx>=k["box"][0]&&tempx<k["box"][0]+k["box"][2]&&tempy>=k["box"][1]&&tempy<k["box"][1]+k["box"][3]) {
-				//this.action(k["action"])
 				return k;
 			}
 		}

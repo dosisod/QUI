@@ -40,31 +40,34 @@ class QUIrenderer {
 			this.rect(this.board["bg"]["value"], [0,0,this.screenx,this.screeny]) //draws background
 		}
 		else if (this.board["bg"]["type"]=="img") {
-			//this.rect(this.board["bg"]["value"], [0,0,this.screenx,this.screeny]) //draws background
-			this.img(this.board["bg"]["value"], [0,0,this.screenx,this.screeny]) //draws background
+			//this.img(this.board["bg"]["value"], [0,0,this.screenx,this.screeny]) //draws background
+			this.img(this.board["bg"]["value"]) //draws background
 		}
-
-		for(var i of this.board["board"]) { //for each box in the board:
-			this.rect(i["color"], this.grid(i["box"])) //draw outline
-			this.text(i["text"], this.grid(i["box"])) //render text
-		}
+		this.bg()
 	}
 	rect(color, box) { //draws box of certain color at given pos
 		//console.log(color, box)
 		this.disp.fillStyle=color
 		this.disp.fillRect(box[0], box[1], box[2], box[3])
 	}
-	img(url) { //draws img background
-		var tmpimg=new Image()
-		tmpimg.src=url
-
-		tmpimg.onload=this.imgh(tmpimg)
+	bg() { //redraws background
+		for(var i of this.board["board"]) { //for each box in the board:
+			this.rect(i["color"], this.grid(i["box"])) //draw outline
+			this.text(i["text"], this.grid(i["box"])) //render text
+		}
 	}
-	imgh(imgobj) { //img handler
-		console.log(imgobj)
-		var pattern=this.disp.createPattern(imgobj, "repeat")
-		this.disp.fillStyle=pattern
-		this.disp.fillRect(0, 0, this.screenx, this.screeny)
+	img(url) { //draws img background
+		var imgobj=new Image()
+		imgobj.src="sprite.png"
+		imgobj.back=this //adds this to imgobj so it can be used in onload func
+		imgobj.onload=function() {
+			for (var w=0;w<this.back.canv.width;w+=imgobj.width) {
+				for (var h=0;h<this.back.canv.height;h+=imgobj.height) {
+					this.back.disp.drawImage(imgobj,w,h)
+				}
+			}
+			this.back.bg()
+		}
 	}
 	text(str, box) { //renders text at given pos
 		this.disp.font="48px monospace"

@@ -1,0 +1,19 @@
+{
+	"x":4,
+	"y":4,
+	"bg":{"type":"img","value":"sprite.png"},
+	"board": [
+		{"box":[0,0,3,1],
+		"color":"#f00",
+		"text":"HELLO",
+		"action":"alert('RED')"},
+		{"box":[1,1,1,1],
+		"color":"#fff",
+		"text":"HEY",
+		"action":"alert('WHITE')"},
+		{"box":[1,2,2,1],
+		"color":"#aaa",
+		"text":"HEY",
+		"action":"alert('GRAY')"}
+	]
+}

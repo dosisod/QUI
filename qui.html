@@ -9,9 +9,16 @@
 </canvas>
 
 <script>
-//qq=new QUIrenderer({url:"grid.json"})
-qq=new QUIrenderer({url:"color.json"})
+
+//pass board as url
+qq=new QUIrenderer({url:"board.json"})
+
+//pass board as string
 //qq=new QUIrenderer({str:`{"x":4,"y":4,"bg":{"type":"color","value":"#000"},"board":[{"box":[0,0,3,1],"color":"#f00","text":"HELLO","action":"alert('RED')"},{"box":[1,1,1,1],"color":"#fff","text":"HEY","action":"alert('WHITE')"},{"box":[1,2,2,1],"color":"#aaa","text":"HEY","action":"alert('GRAY')"}]}`})
+
+//pass board as JSON object
+//qq=new QUIrenderer({json:{"x":4,"y":4,"bg":{"type":"color","value":"#000"},"board":[{"box":[0,0,3,1],"color":"#f00","text":"HELLO","action":"alert('RED')"},{"box":[1,1,1,1],"color":"#fff","text":"HEY","action":"alert('WHITE')"},{"box":[1,2,2,1],"color":"#aaa","text":"HEY","action":"alert('GRAY')"}]}})
+
 qq.init()
 </script>
 

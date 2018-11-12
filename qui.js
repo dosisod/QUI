@@ -26,7 +26,11 @@ class QUIrenderer {
 		this.mouse=function(e){
 			this.mousex=e.clientX
 			this.mousey=e.clientY
-			this.action(this.clicked()["action"]) //runs JS code from clicked on grid
+			var current=this.clicked()
+
+			if (current) {
+				this.action(current["action"]) //runs JS code from clicked on grid
+			}
 		}
 
 		this.mouseh=this.mouse.bind(this) //mouse handler

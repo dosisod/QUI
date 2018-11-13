@@ -41,11 +41,10 @@ class QUIrenderer {
 	}
 	init() { //loads the board to the screen
 		if (this.board["bg"]["type"]=="color") {
-			this.rect(this.board["bg"]["value"], [0,0,this.screenx,this.screeny]) //draws background
+			this.rect(this.board["bg"]["value"], [0,0,this.screenx, this.screeny]) //draws background
 		}
 		else if (this.board["bg"]["type"]=="img") {
-			//this.img(this.board["bg"]["value"], [0,0,this.screenx,this.screeny]) //draws background
-			this.img(this.board["bg"]["value"]) //draws background
+			this.img(this.board["bg"]["value"], [0,0,this.screenx, this.screeny]) //draws background
 		}
 		this.bg()
 	}
@@ -60,14 +59,21 @@ class QUIrenderer {
 			this.text(i["text"], this.grid(i["box"])) //render text
 		}
 	}
-	img(url) { //draws img background
+	//x1 y1 x2 y2
+	img(url, box) { //draws img and trim
 		var imgobj=new Image()
 		imgobj.src="sprite.png"
 		imgobj.back=this //adds this to imgobj so it can be used in onload func
 		imgobj.onload=function() {
-			for (var w=0;w<this.back.canv.width;w+=imgobj.width) {
-				for (var h=0;h<this.back.canv.height;h+=imgobj.height) {
-					this.back.disp.drawImage(imgobj,w,h)
+			for (var w=0;w<=~~(box[2]/imgobj.width);w++) {
+				for (var h=0;h<=~~(box[3]/imgobj.height);h++) {
+					var tempx=Math.min(box[2]-(w*imgobj.width),imgobj.width)
+					var tempy=Math.min(box[3]-(h*imgobj.height),imgobj.height)
+					if (tempx>0&&tempy>0) {
+						this.back.disp.drawImage(imgobj,0,0,
+							tempx,tempy,
+							(w*imgobj.width)+box[0],(h*imgobj.height)+box[1],tempx,tempy)
+					}
 				}
 			}
 			this.back.bg()

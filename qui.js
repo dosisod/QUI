@@ -39,30 +39,69 @@ class QUIrenderer {
 		this.disp.canvas.width=this.screenx //resizes canvas
 		this.disp.canvas.height=this.screeny
 	}
+	style(boxes) { //determines what style technique to use on baclground
+		console.log("style",boxes)
+		//for (var i in boxes) {
+		for (var i=0;i<boxes.length;i++) {
+			console.log("style-inner",boxes[i])
+			if (boxes[i]["bg"]["type"]=="color") {
+				//this.rect(boxes[i]["bg"]["value"], [0,0,this.screenx, this.screeny]) //draws background with color
+				this.rect(boxes[i]["bg"]["value"], [...boxes[i]["box"]]) //draws background with color
+			}
+			else if (boxes[i]["bg"]["type"]=="img") {
+				//this.img(boxes[i]["bg"]["value"], [0,0,this.screenx, this.screeny]) //draws background with image
+				//this.img(boxes[i]["bg"]["value"], [...boxes[i]["box"]]) //draws background with image
+				this.img(boxes[i]["bg"]["value"], [...this.grid(boxes[i]["box"])]) //draws background with image
+			}
+			this.text(boxes[i])
+			//this.redraw()
+			//this.bg()
+		}
+	}
+	init() {
+		//this.style([this.board])
+		//this.style(this.board["board"])
+		//this.redraw([this.board])
+		this.redraw([this.board["first"]])
+		this.redraw(this.board["board"])
+	}
+	/*
 	init() { //loads the board to the screen
 		if (this.board["bg"]["type"]=="color") {
-			this.rect(this.board["bg"]["value"], [0,0,this.screenx, this.screeny]) //draws background
+			this.rect(this.board["bg"]["value"], [0,0,this.screenx, this.screeny]) //draws background with color
 		}
 		else if (this.board["bg"]["type"]=="img") {
-			this.img(this.board["bg"]["value"], [0,0,this.screenx, this.screeny]) //draws background
+			this.img(this.board["bg"]["value"], [0,0,this.screenx, this.screeny]) //draws background with image
 		}
 		this.bg()
 	}
+	*/
 	rect(color, box) { //draws box of certain color at given pos
-		//console.log(color, box)
 		this.disp.fillStyle=color
-		this.disp.fillRect(box[0], box[1], box[2], box[3])
+		//this.disp.fillRect(box[0], box[1], box[2], box[3])
+		this.disp.fillRect(...this.grid(box))
 	}
+	redraw(boxes) { //redraws all grids
+		//for(var i of boxes) { //for each box in the board:
+		for(var i=0;i<boxes.length;i++) { //for each box in the board:
+			console.log("redraw",boxes[i])
+			this.style([boxes[i]]) //draw outline
+			//this.text(i["text"], this.grid(i["box"])) //render text
+			this.text(boxes[i]) //render text
+		}
+	}
+	/*
 	bg() { //redraws background
 		for(var i of this.board["board"]) { //for each box in the board:
 			this.rect(i["color"], this.grid(i["box"])) //draw outline
 			this.text(i["text"], this.grid(i["box"])) //render text
 		}
 	}
-	//x1 y1 x2 y2
+	*/
+
 	img(url, box) { //draws img and trim
+	//async img(url, box) { //draws img and trim
 		var imgobj=new Image()
-		imgobj.src="sprite.png"
 		imgobj.back=this //adds this to imgobj so it can be used in onload func
 		imgobj.onload=function() {
 			for (var w=0;w<=~~(box[2]/imgobj.width);w++) {
@@ -76,14 +115,24 @@ class QUIrenderer {
 					}
 				}
 			}
-			this.back.bg()
+		}
+		imgobj.src=url
+		//return;
+	}
+	text(box) { //renders text at given pos
+		if (box["text"]) { //makes sure there is text to print
+			this.disp.font="48px monospace"
+			this.disp.fillStyle="black"
+			this.disp.fillText(box["text"], box["box"][0]*this.sizex, (box["box"][1]*this.sizey)+50)
 		}
 	}
+	/*
 	text(str, box) { //renders text at given pos
 		this.disp.font="48px monospace"
 		this.disp.fillStyle="black"
 		this.disp.fillText(str, box[0], box[1]+50)
 	}
+	*/
 	action(s) { //runs JS code from string
 		var tmp=new Function(s)
 		return(tmp())

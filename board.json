@@ -1,17 +1,17 @@
 {
 	"x":4,
 	"y":6,
-	"bg":{"type":"img","value":"sprite.png"},
+	"first":{"box":[0,0,4,6],"bg":{"type":"img","value":"sprite.png"}},
 	"board": [
 		{"box":[0,0,4,1],
-		"color":"#ff7f00",
+		"bg":{"type":"color","value":"#ff7f00"},
 		"text":"Check Console"},
 		{"box":[0,1,2,1],
-		"color":"#777",
+		"bg":{"type":"color","value":"#777"},
 		"text":"Click1",
 		"action":"console.log('test')"},
 		{"box":[2,2,2,1],
-		"color":"#777",
+		"bg":{"type":"color","value":"#777"},
 		"text":"Click2",
 		"action":"console.log('test')"}
 	]

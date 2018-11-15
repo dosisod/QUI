@@ -1,6 +1,5 @@
 class QUIrenderer {
 	constructor({url=false, str=false, json=false}) {
-		//console.log(url,str,json)
 		if (str) { this.board=JSON.parse(str) }
 		else if (json) { this.board=json }
 		else {
@@ -38,55 +37,62 @@ class QUIrenderer {
 
 		this.disp.canvas.width=this.screenx //resizes canvas
 		this.disp.canvas.height=this.screeny
+
+		this.srcs=[] //stores all urls to be loaded into cache
+		this.imgs=[] //image objs that load the images
 	}
 	style(boxes) { //determines what style technique to use on baclground
 		console.log("style",boxes)
-		//for (var i in boxes) {
 		for (var i=0;i<boxes.length;i++) {
 			console.log("style-inner",boxes[i])
 			if (boxes[i]["bg"]["type"]=="color") {
-				//this.rect(boxes[i]["bg"]["value"], [0,0,this.screenx, this.screeny]) //draws background with color
 				this.rect(boxes[i]["bg"]["value"], [...boxes[i]["box"]]) //draws background with color
 			}
 			else if (boxes[i]["bg"]["type"]=="img") {
-				//this.img(boxes[i]["bg"]["value"], [0,0,this.screenx, this.screeny]) //draws background with image
-				//this.img(boxes[i]["bg"]["value"], [...boxes[i]["box"]]) //draws background with image
 				this.img(boxes[i]["bg"]["value"], [...this.grid(boxes[i]["box"])]) //draws background with image
 			}
 			this.text(boxes[i])
-			//this.redraw()
-			//this.bg()
+		}
+	}
+	cache() { //finds all unique img urls and loads them
+		for (var i of this.board["board"]) {
+			if (i["bg"]["type"]=="img") {
+				alert("HERE")
+				//if (!i["bg"]["value"] in this.srcs) { //only appends url if its not there
+				if (!this.srcs.includes(i["bg"]["value"])) { //only appends url if its not there
+					this.srcs.push(i["bg"]["value"])
+				}
+			}
+		}
+		for (var i=0;i<this.srcs.length;i++) {
+			this.imgs[i]=new Image()
+			this.imgs[i].src=this.srcs[i]
+		}
+		//screen stays like this untill all images are loaded
+		//this.redraw([{"bg":{"type":"color","value":"#777"},"text":"Loading Images...","box":[0,0,this.board["x"],this.board["y"]]}])
+	}
+	check() { //loops until all images in cache are loaded in
+		for (var i=0;i<this.imgs.length;i++) {
+			if (!this.imgs[i].complete) {
+				setTimeout(this.check.bind(this),20)
+				return
+			}
 		}
 	}
 	init() {
-		//this.style([this.board])
-		//this.style(this.board["board"])
-		//this.redraw([this.board])
-		this.redraw([this.board["first"]])
+		this.cache()
+		this.check()
 		this.redraw(this.board["board"])
+		//this.redraw([this.board["board"][0]])
 	}
-	/*
-	init() { //loads the board to the screen
-		if (this.board["bg"]["type"]=="color") {
-			this.rect(this.board["bg"]["value"], [0,0,this.screenx, this.screeny]) //draws background with color
-		}
-		else if (this.board["bg"]["type"]=="img") {
-			this.img(this.board["bg"]["value"], [0,0,this.screenx, this.screeny]) //draws background with image
-		}
-		this.bg()
-	}
-	*/
 	rect(color, box) { //draws box of certain color at given pos
 		this.disp.fillStyle=color
-		//this.disp.fillRect(box[0], box[1], box[2], box[3])
 		this.disp.fillRect(...this.grid(box))
 	}
 	redraw(boxes) { //redraws all grids
-		//for(var i of boxes) { //for each box in the board:
 		for(var i=0;i<boxes.length;i++) { //for each box in the board:
 			console.log("redraw",boxes[i])
 			this.style([boxes[i]]) //draw outline
-			//this.text(i["text"], this.grid(i["box"])) //render text
 			this.text(boxes[i]) //render text
 		}
 	}
@@ -100,7 +106,24 @@ class QUIrenderer {
 	*/
 
 	img(url, box) { //draws img and trim
-	//async img(url, box) { //draws img and trim
+		var imgobj=this.imgs[this.srcs.indexOf(url)]
+
+		//var index=this.srcs.indexOf(url)
+		//console.log("img",this.imgs[index].width)
+		//console.log(this.disp)
+		for (var w=0;w<=~~(box[2]/imgobj.width);w++) {
+			for (var h=0;h<=~~(box[3]/imgobj.height);h++) {
+				var tempx=Math.min(box[2]-(w*imgobj.width),imgobj.width)
+				var tempy=Math.min(box[3]-(h*imgobj.height),imgobj.height)
+				if (tempx>0&&tempy>0) {
+					this.disp.drawImage(imgobj,0,0,
+						tempx,tempy,
+						(w*imgobj.width)+box[0],(h*imgobj.height)+box[1],tempx,tempy)
+					console.log(0,0,tempx,tempy,(w*imgobj.width)+box[0],(h*imgobj.height)+box[1],tempx,tempy)
+				}
+			}
+		}
+		/*
 		var imgobj=new Image()
 		imgobj.back=this //adds this to imgobj so it can be used in onload func
 		imgobj.onload=function() {
@@ -116,8 +139,9 @@ class QUIrenderer {
 				}
 			}
 		}
-		imgobj.src=url
+		//imgobj.src=url
 		//return;
+		*/
 	}
 	text(box) { //renders text at given pos
 		if (box["text"]) { //makes sure there is text to print

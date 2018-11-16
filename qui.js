@@ -57,7 +57,6 @@ class QUIrenderer {
 	cache() { //finds all unique img urls and loads them
 		for (var i of this.board["board"]) {
 			if (i["bg"]["type"]=="img") {
-				alert("HERE")
 				//if (!i["bg"]["value"] in this.srcs) { //only appends url if its not there
 				if (!this.srcs.includes(i["bg"]["value"])) { //only appends url if its not there
 					this.srcs.push(i["bg"]["value"])
@@ -119,7 +118,7 @@ class QUIrenderer {
 					this.disp.drawImage(imgobj,0,0,
 						tempx,tempy,
 						(w*imgobj.width)+box[0],(h*imgobj.height)+box[1],tempx,tempy)
-					console.log(0,0,tempx,tempy,(w*imgobj.width)+box[0],(h*imgobj.height)+box[1],tempx,tempy)
+					//console.log(0,0,tempx,tempy,(w*imgobj.width)+box[0],(h*imgobj.height)+box[1],tempx,tempy)
 				}
 			}
 		}
@@ -164,11 +163,13 @@ class QUIrenderer {
 	clicked() { //finds out what grid was clicked based off mouse pos
 		var tempx=~~(this.mousex/this.sizex)
 		var tempy=~~(this.mousey/this.sizey)
-		for (var k of this.board["board"]) {
-			if (tempx>=k["box"][0]&&tempx<k["box"][0]+k["box"][2]&&tempy>=k["box"][1]&&tempy<k["box"][1]+k["box"][3]) {
-				return k;
+		var ret //returns the must recent board matching the cords
+		for (var i of this.board["board"]) {
+			if (tempx>=i["box"][0]&&tempx<i["box"][0]+i["box"][2]&&tempy>=i["box"][1]&&tempy<i["box"][1]+i["box"][3]) {
+				ret=i; //instead of getting first element that matches cords, get the last becase it is ontop of the others
 			}
 		}
+		return ret
 	}
 	grid(box) { //returns cords for grid based on grid size and screen size
 		return [box[0]*this.sizex,box[1]*this.sizey,box[2]*this.sizex,box[3]*this.sizey]

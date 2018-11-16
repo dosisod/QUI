@@ -14,8 +14,6 @@
 		{"box":[2,2,2,1],
 		"bg":{"type":"color","value":"#777"},
 		"text":"Click2",
-		"action":"console.log('test')"},
-		{"box":[0,0,4,6],
-		"bg":{"type":"img","value":"sprite.png"}}
+		"action":"console.log('test')"}
 	]
 }

@@ -14,7 +14,7 @@ I got the idea after playing Watchdogs and seeing all the UI elements:
 
 # Basic Syntax
 
-```josn
+```javascript
 {
 	"x":4,
 	"y":4,    //Max X and Y size

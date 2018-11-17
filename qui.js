@@ -44,7 +44,7 @@ class QUIrenderer {
 	style(boxes) { //determines what style technique to use on baclground
 		console.log("style",boxes)
 		for (var i=0;i<boxes.length;i++) {
-			console.log("style-inner",boxes[i])
+			console.log("style-inner",boxes[i]) //debug
 			if (boxes[i]["bg"]["type"]=="color") {
 				this.rect(boxes[i]["bg"]["value"], [...boxes[i]["box"]]) //draws background with color
 			}
@@ -57,23 +57,22 @@ class QUIrenderer {
 	cache() { //finds all unique img urls and loads them
 		for (var i of this.board["board"]) {
 			if (i["bg"]["type"]=="img") {
-				//if (!i["bg"]["value"] in this.srcs) { //only appends url if its not there
 				if (!this.srcs.includes(i["bg"]["value"])) { //only appends url if its not there
 					this.srcs.push(i["bg"]["value"])
 				}
 			}
 		}
-		for (var i=0;i<this.srcs.length;i++) {
+		for (var i=0;i<this.srcs.length;i++) { //loads each string into an object
 			this.imgs[i]=new Image()
 			this.imgs[i].src=this.srcs[i]
 		}
-		//screen stays like this untill all images are loaded
-		//this.redraw([{"bg":{"type":"color","value":"#777"},"text":"Loading Images...","box":[0,0,this.board["x"],this.board["y"]]}])
+		//screen stays like this until all images are loaded
+		this.redraw([{"bg":{"type":"color","value":"#777"},"text":"Loading Images...","box":[0,0,this.board["x"],this.board["y"]]}])
 	}
 	check() { //loops until all images in cache are loaded in
 		for (var i=0;i<this.imgs.length;i++) {
 			if (!this.imgs[i].complete) {
-				setTimeout(this.check.bind(this),20)
+				setTimeout(this.check.bind(this),20) //re run until every img in cache is loaded
 				return
 			}
 		}
@@ -81,8 +80,9 @@ class QUIrenderer {
 	init() {
 		this.cache()
 		this.check()
+
+		this.rect("#fff",[0,0,this.board["x"],this.board["y"]]) //after imgs load, blank screen
 		this.redraw(this.board["board"])
-		//this.redraw([this.board["board"][0]])
 	}
 	rect(color, box) { //draws box of certain color at given pos
 		this.disp.fillStyle=color
@@ -95,21 +95,9 @@ class QUIrenderer {
 			this.text(boxes[i]) //render text
 		}
 	}
-	/*
-	bg() { //redraws background
-		for(var i of this.board["board"]) { //for each box in the board:
-			this.rect(i["color"], this.grid(i["box"])) //draw outline
-			this.text(i["text"], this.grid(i["box"])) //render text
-		}
-	}
-	*/
-
 	img(url, box) { //draws img and trim
 		var imgobj=this.imgs[this.srcs.indexOf(url)]
 
-		//var index=this.srcs.indexOf(url)
-		//console.log("img",this.imgs[index].width)
-		//console.log(this.disp)
 		for (var w=0;w<=~~(box[2]/imgobj.width);w++) {
 			for (var h=0;h<=~~(box[3]/imgobj.height);h++) {
 				var tempx=Math.min(box[2]-(w*imgobj.width),imgobj.width)
@@ -122,7 +110,8 @@ class QUIrenderer {
 				}
 			}
 		}
-		/*
+		/* This code block has been kept back for referencing
+
 		var imgobj=new Image()
 		imgobj.back=this //adds this to imgobj so it can be used in onload func
 		imgobj.onload=function() {
@@ -149,13 +138,6 @@ class QUIrenderer {
 			this.disp.fillText(box["text"], box["box"][0]*this.sizex, (box["box"][1]*this.sizey)+50)
 		}
 	}
-	/*
-	text(str, box) { //renders text at given pos
-		this.disp.font="48px monospace"
-		this.disp.fillStyle="black"
-		this.disp.fillText(str, box[0], box[1]+50)
-	}
-	*/
 	action(s) { //runs JS code from string
 		var tmp=new Function(s)
 		return(tmp())

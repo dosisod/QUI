@@ -2,7 +2,7 @@
 Quick User Interface: Loads a JSON grid of programmable buttons
 
 Example:
-![Example Board](img/img.jpg)
+![Example Board](/img/eg.jpg)
 
 # Inspiration
 
@@ -10,7 +10,7 @@ Wanted to make a simple to deploy UI in JSON that could be rendered in a HTML ca
 
 I got the idea after playing Watchdogs and seeing all the UI elements:
 
-![Watchdogs Screenshot](img/wd.png)
+![Watchdogs Screenshot](/img/wd.png)
 
 # Basic Syntax
 

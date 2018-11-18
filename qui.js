@@ -110,26 +110,6 @@ class QUIrenderer {
 				}
 			}
 		}
-		/* This code block has been kept back for referencing
-
-		var imgobj=new Image()
-		imgobj.back=this //adds this to imgobj so it can be used in onload func
-		imgobj.onload=function() {
-			for (var w=0;w<=~~(box[2]/imgobj.width);w++) {
-				for (var h=0;h<=~~(box[3]/imgobj.height);h++) {
-					var tempx=Math.min(box[2]-(w*imgobj.width),imgobj.width)
-					var tempy=Math.min(box[3]-(h*imgobj.height),imgobj.height)
-					if (tempx>0&&tempy>0) {
-						this.back.disp.drawImage(imgobj,0,0,
-							tempx,tempy,
-							(w*imgobj.width)+box[0],(h*imgobj.height)+box[1],tempx,tempy)
-					}
-				}
-			}
-		}
-		//imgobj.src=url
-		//return;
-		*/
 	}
 	text(box) { //renders text at given pos
 		if (box["text"]) { //makes sure there is text to print

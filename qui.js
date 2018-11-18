@@ -49,12 +49,16 @@ class QUIrenderer {
 				this.rect(boxes[i]["bg"]["value"], [...boxes[i]["box"]]) //draws background with color
 			}
 			else if (boxes[i]["bg"]["type"]=="img") {
-				this.img(boxes[i]["bg"]["value"], [...this.grid(boxes[i]["box"])]) //draws background with image
+				if (this.imgs[this.srcs.indexOf(boxes[i]["bg"]["value"])]) { //
+					if (this.imgs[this.srcs.indexOf(boxes[i]["bg"]["value"])].complete) {
+						this.img(boxes[i]["bg"]["value"], [...this.grid(boxes[i]["box"])]) //draws background with image
+					}
+				}
 			}
 			this.text(boxes[i])
 		}
 	}
-	cache() { //finds all unique img urls and loads them
+	findall() { //finds all unique img urls and loads them
 		for (var i of this.board["board"]) {
 			if (i["bg"]["type"]=="img") {
 				if (!this.srcs.includes(i["bg"]["value"])) { //only appends url if its not there
@@ -62,26 +66,27 @@ class QUIrenderer {
 				}
 			}
 		}
-		for (var i=0;i<this.srcs.length;i++) { //loads each string into an object
-			this.imgs[i]=new Image()
-			this.imgs[i].src=this.srcs[i]
-		}
-		//screen stays like this until all images are loaded
-		this.redraw([{"bg":{"type":"color","value":"#777"},"text":"Loading Images...","box":[0,0,this.board["x"],this.board["y"]]}])
 	}
-	check() { //loops until all images in cache are loaded in
-		for (var i=0;i<this.imgs.length;i++) {
-			if (!this.imgs[i].complete) {
-				setTimeout(this.check.bind(this),20) //re run until every img in cache is loaded
-				return
+	cache(url) {
+		return new Promise(function(resolve){
+			var imgobj=new Image()
+			imgobj.onload=function(){
+				resolve(imgobj)
+			}
+			imgobj.src=url
+		})
+	}
+	async cacheall() { //caches all imgs in this.srcs
+		this.findall()
+		for (var i in this.srcs) {
+			if (!this.imgs[i]) { //if not initialized
+				this.imgs[i]=await this.cache(this.srcs[i])
+				this.redraw(this.board["board"])
 			}
 		}
 	}
 	init() {
-		this.cache()
-		this.check()
-
-		this.rect("#fff",[0,0,this.board["x"],this.board["y"]]) //after imgs load, blank screen
+		this.cacheall()
 		this.redraw(this.board["board"])
 	}
 	rect(color, box) { //draws box of certain color at given pos
@@ -97,6 +102,7 @@ class QUIrenderer {
 	}
 	img(url, box) { //draws img and trim
 		var imgobj=this.imgs[this.srcs.indexOf(url)]
+		console.log("here")
 
 		for (var w=0;w<=~~(box[2]/imgobj.width);w++) {
 			for (var h=0;h<=~~(box[3]/imgobj.height);h++) {
@@ -106,7 +112,6 @@ class QUIrenderer {
 					this.disp.drawImage(imgobj,0,0,
 						tempx,tempy,
 						(w*imgobj.width)+box[0],(h*imgobj.height)+box[1],tempx,tempy)
-					//console.log(0,0,tempx,tempy,(w*imgobj.width)+box[0],(h*imgobj.height)+box[1],tempx,tempy)
 				}
 			}
 		}

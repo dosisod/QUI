@@ -25,10 +25,10 @@ class QUIrenderer {
 		this.mouse=function(e){
 			this.mousex=e.clientX
 			this.mousey=e.clientY
-			var current=this.clicked()
+			this.currentgrid=this.clicked()
 
-			if (current) {
-				this.action(current["action"]) //runs JS code from clicked on grid
+			if (this.currentgrid) {
+				this.action(this.currentgrid["action"]) //runs JS code from clicked on grid
 			}
 		}
 
@@ -126,8 +126,8 @@ class QUIrenderer {
 		}
 	}
 	action(s) { //runs JS code from string
-		this.newaction=new Function(s) //sets function as attribue so it has access to class
-		return(this.newaction())
+		this.currentaction=new Function(s) //sets function as attribue so it has access to class
+		return(this.currentaction())
 	}
 	clicked() { //finds out what grid was clicked based off mouse pos
 		var tempx=~~(this.mousex/this.sizex)

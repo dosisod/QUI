@@ -40,6 +40,8 @@ class QUIrenderer {
 
 		this.srcs=[] //stores all urls to be loaded into cache
 		this.imgs=[] //image objs that load the images
+
+		this.yscroll=0 //amount that the page has been scrolled
 	}
 	style(boxes) { //determines what style technique to use on baclground
 		console.log("style",boxes)
@@ -124,8 +126,8 @@ class QUIrenderer {
 		}
 	}
 	action(s) { //runs JS code from string
-		var tmp=new Function(s)
-		return(tmp())
+		this.newaction=new Function(s) //sets function as attribue so it has access to class
+		return(this.newaction())
 	}
 	clicked() { //finds out what grid was clicked based off mouse pos
 		var tempx=~~(this.mousex/this.sizex)

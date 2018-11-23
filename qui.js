@@ -53,9 +53,7 @@ class QUIrenderer {
 		this.board["board"][this.currentgridid]=box
 	}
 	style(boxes) { //determines what style technique to use on baclground
-		console.log("style",boxes)
 		for (var i=0;i<boxes.length;i++) {
-			console.log("style-inner",boxes[i]) //debug
 			if (boxes[i]["bg"]["type"]=="color") {
 				this.rect(boxes[i]["bg"]["value"], [...this.grid(boxes[i]["box"])]) //draws background with color
 			}
@@ -78,7 +76,7 @@ class QUIrenderer {
 			}
 		}
 	}
-	cache(url) {
+	cache(url) { //chaches single image
 		return new Promise(function(resolve){
 			var imgobj=new Image()
 			imgobj.onload=function(){
@@ -90,12 +88,12 @@ class QUIrenderer {
 	async cacheall() { //caches all imgs in this.srcs
 		for (var i in this.srcs) {
 			if (!this.imgs[i]) { //if not initialized
-				this.imgs[i]=await this.cache(this.srcs[i])
-				this.redraw(this.board["board"])
+				this.imgs[i]=await this.cache(this.srcs[i]) //awaits for img to finish
+				this.redraw(this.board["board"]) //then redraw the screen
 			}
 		}
 	}
-	init() {
+	init() { //initializes the screen
 		this.findall()
 		this.cacheall()
 		this.redrawall()
@@ -106,7 +104,6 @@ class QUIrenderer {
 	}
 	redraw(boxes) { //redraws all grids
 		for(var i=0;i<boxes.length;i++) { //for each box in the board:
-			console.log("redraw",boxes[i])
 			this.style([boxes[i]]) //draw outline
 			this.text(boxes[i]) //render text
 		}

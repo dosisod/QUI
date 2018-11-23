@@ -25,10 +25,10 @@ class QUIrenderer {
 		this.mouse=function(e){
 			this.mousex=e.clientX
 			this.mousey=e.clientY
-			this.currentgrid=this.clicked()
+			this.tempgrid=this.clicked()
 
-			if (this.currentgrid) {
-				this.action(this.currentgrid["action"]) //runs JS code from clicked on grid
+			if (this.tempgrid) {
+				this.action(this.tempgrid["action"]) //runs JS code from clicked on grid
 			}
 		}
 
@@ -42,13 +42,22 @@ class QUIrenderer {
 		this.imgs=[] //image objs that load the images
 
 		this.yscroll=0 //amount that the page has been scrolled
+		
+		this.currentgridid=0 //current index of this.board["board"]
+		this._currentgrid=undefined //undefined getter+setter obj
+	}
+	get currentgrid() { //when current board requesting board, grab current instance
+		return this.board["board"][this.currentgridid]
+	}
+	set currentgrid(box) { //when current board is set, put it into the board object
+		this.board["board"][this.currentgridid]=box
 	}
 	style(boxes) { //determines what style technique to use on baclground
 		console.log("style",boxes)
 		for (var i=0;i<boxes.length;i++) {
 			console.log("style-inner",boxes[i]) //debug
 			if (boxes[i]["bg"]["type"]=="color") {
-				this.rect(boxes[i]["bg"]["value"], [...boxes[i]["box"]]) //draws background with color
+				this.rect(boxes[i]["bg"]["value"], [...this.grid(boxes[i]["box"])]) //draws background with color
 			}
 			else if (boxes[i]["bg"]["type"]=="img") {
 				if (this.imgs[this.srcs.indexOf(boxes[i]["bg"]["value"])]) { //
@@ -79,7 +88,6 @@ class QUIrenderer {
 		})
 	}
 	async cacheall() { //caches all imgs in this.srcs
-		this.findall()
 		for (var i in this.srcs) {
 			if (!this.imgs[i]) { //if not initialized
 				this.imgs[i]=await this.cache(this.srcs[i])
@@ -88,12 +96,13 @@ class QUIrenderer {
 		}
 	}
 	init() {
+		this.findall()
 		this.cacheall()
-		this.redraw(this.board["board"])
+		this.redrawall()
 	}
 	rect(color, box) { //draws box of certain color at given pos
 		this.disp.fillStyle=color
-		this.disp.fillRect(...this.grid(box))
+		this.disp.fillRect(...box)
 	}
 	redraw(boxes) { //redraws all grids
 		for(var i=0;i<boxes.length;i++) { //for each box in the board:
@@ -102,9 +111,11 @@ class QUIrenderer {
 			this.text(boxes[i]) //render text
 		}
 	}
+	redrawall() {
+		this.redraw(this.board["board"])
+	}
 	img(url, box) { //draws img and trim
 		var imgobj=this.imgs[this.srcs.indexOf(url)]
-		console.log("here")
 
 		for (var w=0;w<=~~(box[2]/imgobj.width);w++) {
 			for (var h=0;h<=~~(box[3]/imgobj.height);h++) {
@@ -132,15 +143,37 @@ class QUIrenderer {
 	clicked() { //finds out what grid was clicked based off mouse pos
 		var tempx=~~(this.mousex/this.sizex)
 		var tempy=~~(this.mousey/this.sizey)
-		var ret //returns the must recent board matching the cords
-		for (var i of this.board["board"]) {
-			if (tempx>=i["box"][0]&&tempx<i["box"][0]+i["box"][2]&&tempy>=i["box"][1]&&tempy<i["box"][1]+i["box"][3]) {
-				ret=i; //instead of getting first element that matches cords, get the last becase it is ontop of the others
+		var ret //returns the most recent board matching the cords
+
+		for (var i=0;i<this.board["board"].length;i++) {
+			//checks to see if the current mouse pos is within the current mouse grid
+			if (tempx>=this.board["board"][i]["box"][0]&&
+				tempx<this.board["board"][i]["box"][0]+this.board["board"][i]["box"][2]&&
+				tempy>=this.board["board"][i]["box"][1]&&
+				tempy<this.board["board"][i]["box"][1]+this.board["board"][i]["box"][3]) {
+				ret=i //instead of getting first element that matches cords, get the last becase it is ontop of the others
+				this.currentgridid=i
 			}
 		}
-		return ret
+		this.currentgrid=this.board["board"][ret]
+		return this.board["board"][ret]
 	}
 	grid(box) { //returns cords for grid based on grid size and screen size
 		return [box[0]*this.sizex,box[1]*this.sizey,box[2]*this.sizex,box[3]*this.sizey]
+	}
+	newimg(src, box) { //wrapper that handles new img srcs
+		if (!this.srcs.includes(src)) {
+			box["bg"]["value"]=src
+			this.srcs.push(src)
+			
+			//this.imgs[this.srcs.length]=new Image()
+			//this.imgs[this.srcs.lengtg].src=src
+			
+			this.findall()
+			this.cacheall()
+			//this.redraw(this.currentgrid)
+
+			return box
+		}
 	}
 }

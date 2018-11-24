@@ -43,7 +43,7 @@ class QUIrenderer {
 
 		this.yscroll=0 //amount that the page has been scrolled
 		
-		this.currentgridid=0 //current index of this.board["board"]
+		this.currentgridid=undefined //current index of this.board["board"]
 		this._currentgrid=undefined //undefined getter+setter obj
 	}
 	get currentgrid() { //when current board requesting board, grab current instance
@@ -54,20 +54,20 @@ class QUIrenderer {
 	}
 	style(boxes) { //determines what style technique to use on baclground
 		for (var i=0;i<boxes.length;i++) {
-			if (boxes[i]["bg"]["type"]=="color") {
+			if (boxes[i]["bg"]["type"]=="color") { //solid background color
 				this.rect(boxes[i]["bg"]["value"], [...this.grid(boxes[i]["box"])]) //draws background with color
 			}
-			else if (boxes[i]["bg"]["type"]=="img") {
+			else if (boxes[i]["bg"]["type"]=="img") { //tiled background img
 				if (this.imgs[this.srcs.indexOf(boxes[i]["bg"]["value"])]) { //
 					if (this.imgs[this.srcs.indexOf(boxes[i]["bg"]["value"])].complete) {
 						this.img(boxes[i]["bg"]["value"], [...this.grid(boxes[i]["box"])]) //draws background with image
 					}
 				}
 			}
-			else if (boxes[i]["bg"]["type"]=="gradient") {
+			else if (boxes[i]["bg"]["type"]=="gradient") { //color gradient
 				this.gradient(boxes[i]["bg"]["value"], [...this.grid(boxes[i]["box"])])
 			}
-			this.text(boxes[i])
+			this.text(boxes[i]) //adds basic text formatting
 		}
 	}
 	findall() { //finds all unique img urls and loads them
@@ -115,34 +115,34 @@ class QUIrenderer {
 		this.redraw(this.board["board"])
 	}
 	img(url, box) { //draws img and trim
-		var imgobj=this.imgs[this.srcs.indexOf(url)]
+		var imgobj=this.imgs[this.srcs.indexOf(url)] //based off of src find its respective img obj
 
 		for (var w=0;w<=~~(box[2]/imgobj.width);w++) {
 			for (var h=0;h<=~~(box[3]/imgobj.height);h++) {
-				var tempx=Math.min(box[2]-(w*imgobj.width),imgobj.width)
-				var tempy=Math.min(box[3]-(h*imgobj.height),imgobj.height)
+				var tempx=Math.min(box[2]-(w*imgobj.width),imgobj.width)   //partialy fill img if it cant squeeze a full img near border
+				var tempy=Math.min(box[3]-(h*imgobj.height),imgobj.height) //  so, if img is 16 px and only 2px are left, fill the 2px with a partial img
 				if (tempx>0&&tempy>0) {
-					this.disp.drawImage(imgobj,0,0,
-						tempx,tempy,
-						(w*imgobj.width)+box[0],(h*imgobj.height)+box[1],tempx,tempy)
+					this.disp.drawImage(imgobj,0,0, //start from 0,0 of source img
+						tempx,tempy, //display the full img or however much is needed to fill border
+						(w*imgobj.width)+box[0],(h*imgobj.height)+box[1],tempx,tempy) //display that to the screen in respective spot
 				}
 			}
 		}
 	}
-	gradient(params, box) {
+	gradient(params, box) { //prints a gradient background
 		params=params.split(" ") //splits the params into an array
 		params[0]=params[0].toLowerCase() //converts the "X" or "Y" to lowercase
 
 		//makes a new gradient pattern obj
 		if (params[0]=="x") {
-			var tempgradient=this.disp.createLinearGradient(box[0], box[1], box[0]+box[2], box[1]) //left to right
+			var tempgradient=this.disp.createLinearGradient(box[0], box[1], box[0]+box[2], box[1]) //display left to right
 		}
 		else if (params[0]=="y") {
-			var tempgradient=this.disp.createLinearGradient(box[0], box[1], box[0], box[1]+box[3]) //top to bottom
+			var tempgradient=this.disp.createLinearGradient(box[0], box[1], box[0], box[1]+box[3]) //display top to bottom
 		}
 		params.shift(0) //removes the "x" or "y"
 		for (var i=0;i<params.length;i++) { //loop through all of the colors and add them to the gradient
-			tempgradient.addColorStop(1/(params.length-1)*i,params[i])
+			tempgradient.addColorStop(1/(params.length-1)*i,params[i]) //added current color and make sure it evenly takes up space
 		}
 		this.disp.fillStyle=tempgradient
 		this.disp.fillRect(...box)
@@ -159,8 +159,8 @@ class QUIrenderer {
 		return(this.currentaction())
 	}
 	clicked() { //finds out what grid was clicked based off mouse pos
-		var tempx=~~(this.mousex/this.sizex)
-		var tempy=~~(this.mousey/this.sizey)
+		var tempx=~~(this.mousex/this.sizex) //finds what grid cordinates of the mouse are
+		var tempy=~~(this.mousey/this.sizey) //
 		var ret //returns the most recent board matching the cords
 
 		for (var i=0;i<this.board["board"].length;i++) {
@@ -169,12 +169,19 @@ class QUIrenderer {
 				tempx<this.board["board"][i]["box"][0]+this.board["board"][i]["box"][2]&&
 				tempy>=this.board["board"][i]["box"][1]&&
 				tempy<this.board["board"][i]["box"][1]+this.board["board"][i]["box"][3]) {
-				ret=i //instead of getting first element that matches cords, get the last becase it is ontop of the others
-				this.currentgridid=i
+				if (!("ignore" in this.board["board"][i])) { //if ignore flag is set then ignore this board
+					ret=i //instead of getting first element that matches cords, get the last becase it is ontop of the others
+					this.currentgridid=i
+				}
 			}
 		}
-		this.currentgrid=this.board["board"][ret]
-		return this.board["board"][ret]
+		if (ret) {
+			this.currentgrid=this.board["board"][ret]
+			return this.board["board"][ret]
+		}
+		else {
+			return false
+		}
 	}
 	grid(box) { //returns cords for grid based on grid size and screen size
 		return [box[0]*this.sizex,box[1]*this.sizey,box[2]*this.sizex,box[3]*this.sizey]
@@ -183,14 +190,10 @@ class QUIrenderer {
 		if (!this.srcs.includes(src)) {
 			box["bg"]["value"]=src
 			this.srcs.push(src)
-			
-			//this.imgs[this.srcs.length]=new Image()
-			//this.imgs[this.srcs.lengtg].src=src
-			
+						
 			this.findall()
 			this.cacheall()
-			//this.redraw(this.currentgrid)
-
+			
 			return box
 		}
 	}

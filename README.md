@@ -39,3 +39,16 @@ I got the idea after playing Watchdogs and seeing all the UI elements:
 	]
 }
 ```
+
+Many other background options are available, formattings are listed below:
+
+```javascript
+"bg":{"type":"color","value":"#00f"} //solid blue (hex)
+"bg":{"type":"color","value":"rgb(0,0,255)"} //solid blue (rgb)
+"bg":{"type":"color","value":"rgba(0,0,255,0.5)"} //see-through blue (rgba)
+
+"bg":{"type":"img","value":"img.png"} //image background (tiled)
+
+"bg":{"type":"gradient","value":"X #f00 #0f0 #00f"} //horizontal rainbow
+"bg":{"type":"gradient","value":"Y #000 #fff"} //vertical fade to white
+```

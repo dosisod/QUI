@@ -64,6 +64,9 @@ class QUIrenderer {
 					}
 				}
 			}
+			else if (boxes[i]["bg"]["type"]=="gradient") {
+				this.gradient(boxes[i]["bg"]["value"], [...this.grid(boxes[i]["box"])])
+			}
 			this.text(boxes[i])
 		}
 	}
@@ -125,6 +128,24 @@ class QUIrenderer {
 				}
 			}
 		}
+	}
+	gradient(params, box) {
+		params=params.split(" ") //splits the params into an array
+		params[0]=params[0].toLowerCase() //converts the "X" or "Y" to lowercase
+
+		//makes a new gradient pattern obj
+		if (params[0]=="x") {
+			var tempgradient=this.disp.createLinearGradient(box[0], box[1], box[0]+box[2], box[1]) //left to right
+		}
+		else if (params[0]=="y") {
+			var tempgradient=this.disp.createLinearGradient(box[0], box[1], box[0], box[1]+box[3]) //top to bottom
+		}
+		params.shift(0) //removes the "x" or "y"
+		for (var i=0;i<params.length;i++) { //loop through all of the colors and add them to the gradient
+			tempgradient.addColorStop(1/(params.length-1)*i,params[i])
+		}
+		this.disp.fillStyle=tempgradient
+		this.disp.fillRect(...box)
 	}
 	text(box) { //renders text at given pos
 		if (box["text"]) { //makes sure there is text to print

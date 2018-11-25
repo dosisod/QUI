@@ -10,22 +10,25 @@ class QUIrenderer {
 			this.board=JSON.parse(tmp.responseText)
 		}
 
-		this.screenx=window.innerWidth //gets full window size
-		this.screeny=window.innerHeight
-
-		this.sizex=this.screenx/this.board["x"] //size of each individual box in grid
-		this.sizey=this.screeny/this.board["y"]
-
 		this.canv=document.getElementById("c") //gets canvas and makes disp obj for displaying boxes etc
 		this.disp=this.canv.getContext("2d")
+
+		this.update() //sets initial screen size
+
+		this.resize=function() { //called on screen resize
+			this.update()
+			this.redrawall()
+		}
+		this.resizeh=this.resize.bind(this) //resize handler
+		window.addEventListener("resize", this.resizeh, false) //added to window to get when any resizing is done
 
 		this.mousex=0
 		this.mousey=0
 
-		this.mouse=function(e){
+		this.mouse=function(e){ //ran when mouse is clicked
 			this.mousex=e.clientX
 			this.mousey=e.clientY
-			this.tempgrid=this.clicked()
+			this.tempgrid=this.clicked() //stores current grid
 
 			if (this.tempgrid) {
 				this.action(this.tempgrid["action"]) //runs JS code from clicked on grid
@@ -81,11 +84,11 @@ class QUIrenderer {
 	}
 	cache(url) { //chaches single image
 		return new Promise(function(resolve){
-			var imgobj=new Image()
-			imgobj.onload=function(){
-				resolve(imgobj)
+			var imgobj=new Image() //make a new img obj
+			imgobj.onload=function(){ //and when it loads
+				resolve(imgobj) //return it
 			}
-			imgobj.src=url
+			imgobj.src=url //sets src after to make sure onload is caught
 		})
 	}
 	async cacheall() { //caches all imgs in this.srcs
@@ -95,6 +98,16 @@ class QUIrenderer {
 				this.redraw(this.board["board"]) //then redraw the screen
 			}
 		}
+	}
+	update() { //called when screen size changes
+		this.screenx=window.innerWidth
+		this.screeny=window.innerHeight
+		
+		this.sizex=this.screenx/this.board["x"] //size of each individual box in grid
+		this.sizey=this.screeny/this.board["y"]
+		
+		this.disp.canvas.width=this.screenx //resizes canvas
+		this.disp.canvas.height=this.screeny
 	}
 	init() { //initializes the screen
 		this.findall()

@@ -4,6 +4,11 @@ Quick User Interface: Loads a JSON grid of programmable buttons
 Example:
 ![Example Board](/img/eg.png)
 
+# Goal
+
+The goal of this project is to have a simple to setup UI and not to have to hassle with html and css
+I prefer more minimalistic UI, and this does just that while still being able to use javascript
+
 # Inspiration
 
 Wanted to make a simple to deploy UI in JSON that could be rendered in a HTML canvas

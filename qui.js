@@ -154,8 +154,8 @@ class QUIrenderer {
 			this.disp.fillText(box["text"], box["box"][0]*this.sizex, (box["box"][1]*this.sizey)+50)
 		}
 	}
-	action(s) { //runs JS code from string
-		this.currentaction=new Function(s) //sets function as attribue so it has access to class
+	action(str) { //runs JS code from string
+		this.currentaction=new Function(str) //sets function as attribue so it has access to class
 		return(this.currentaction())
 	}
 	clicked() { //finds out what grid was clicked based off mouse pos

@@ -52,7 +52,8 @@ Many other background options are available, formattings are listed below:
 "bg":{"type":"color","value":"rgb(0,0,255)"} //solid blue (rgb)
 "bg":{"type":"color","value":"rgba(0,0,255,0.5)"} //see-through blue (rgba)
 
-"bg":{"type":"img","value":"img.png"} //image background (tiled)
+"bg":{"type":"img","value":"img.png"} //image background from url (tiled)
+"bg":{"type":"img64","value":"iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIA ...etc"} //image background from base64 (tiled)
 
 "bg":{"type":"gradient","value":"X #f00 #0f0 #00f"} //horizontal rainbow
 "bg":{"type":"gradient","value":"Y #000 #fff"} //vertical fade to white

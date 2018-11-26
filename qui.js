@@ -67,6 +67,9 @@ class QUIrenderer {
 					}
 				}
 			}
+			else if (boxes[i]["bg"]["type"]=="img64") {
+				this.img64(boxes[i]["bg"]["value"], [...this.grid(boxes[i]["box"])])
+			}
 			else if (boxes[i]["bg"]["type"]=="gradient") { //color gradient
 				this.gradient(boxes[i]["bg"]["value"], [...this.grid(boxes[i]["box"])])
 			}
@@ -129,7 +132,9 @@ class QUIrenderer {
 	}
 	img(url, box) { //draws img and trim
 		var imgobj=this.imgs[this.srcs.indexOf(url)] //based off of src find its respective img obj
-
+		this.drawimg(imgobj, box)
+	}
+	drawimg(imgobj, box) {
 		for (var w=0;w<=~~(box[2]/imgobj.width);w++) {
 			for (var h=0;h<=~~(box[3]/imgobj.height);h++) {
 				var tempx=Math.min(box[2]-(w*imgobj.width),imgobj.width)   //partialy fill img if it cant squeeze a full img near border
@@ -141,6 +146,11 @@ class QUIrenderer {
 				}
 			}
 		}
+	}
+	img64(str, box) { //loads a base64 img form string
+		var imgobj=new Image()
+		imgobj.src="data:image/png;base64,"+str
+		this.drawimg(imgobj, box)
 	}
 	gradient(params, box) { //prints a gradient background
 		params=params.split(" ") //splits the params into an array

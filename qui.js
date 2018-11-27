@@ -171,10 +171,20 @@ class QUIrenderer {
 		this.disp.fillRect(...box)
 	}
 	text(box) { //renders text at given pos
+		var tempsize=48 //size used for positioning
+		this.disp.font="48px monospace" //default font size and font face
+		this.disp.fillStyle="black" //default color
+		
+		if (box["font"]) { //allow for font styling
+			var tempfont=box["font"].split(" ")
+			
+			tempsize=Number(tempfont[0].replace(/[^0-9]/g,"")) //removes all non numeric values
+			
+			this.disp.font=tempfont[0]+" "+tempfont[1] //takes first 2 params as font size and font face
+			this.disp.fillStyle=tempfont[2] //takes 3rd param as font color
+		}
 		if (box["text"]) { //makes sure there is text to print
-			this.disp.font="48px monospace"
-			this.disp.fillStyle="black"
-			this.disp.fillText(box["text"], box["box"][0]*this.sizex, (box["box"][1]*this.sizey)+50)
+			this.disp.fillText(box["text"], box["box"][0]*this.sizex, (box["box"][1]*this.sizey)+tempsize+2)
 		}
 	}
 	action(str) { //runs JS code from string
@@ -186,7 +196,8 @@ class QUIrenderer {
 		var tempy=~~(this.mousey/this.sizey) //
 		var ret //returns the most recent board matching the cords
 
-		for (var i=0;i<this.board["board"].length;i++) {
+		//for (var i=0;i<this.board["board"].length;i++) {
+		for (var i in this.board["board"]) {
 			//checks to see if the current mouse pos is within the current mouse grid
 			if (tempx>=this.board["board"][i]["box"][0]&&
 				tempx<this.board["board"][i]["box"][0]+this.board["board"][i]["box"][2]&&

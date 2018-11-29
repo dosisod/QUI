@@ -25,7 +25,7 @@ I got the idea after playing Watchdogs and seeing all the UI elements:
 	"y":4,    //Max X and Y size
 
 	//Array of all board elemnts, rendered in order
-	"board":[
+	"grids":[
 		{
 		//Starting X and Y, then Width and Height in grid sizes
 		"box":[0,0,4,4],

@@ -50,10 +50,10 @@ class QUIrenderer {
 		this._currentgrid=undefined //undefined getter+setter obj
 	}
 	get currentgrid() { //when current board requesting board, grab current instance
-		return this.board["board"][this.currentgridid]
+		return this.board["grids"][this.currentgridid]
 	}
 	set currentgrid(box) { //when current board is set, put it into the board object
-		this.board["board"][this.currentgridid]=box
+		this.board["grids"][this.currentgridid]=box
 	}
 	style(boxes) { //determines what style technique to use on baclground
 		for (var i=0;i<boxes.length;i++) {
@@ -77,7 +77,7 @@ class QUIrenderer {
 		}
 	}
 	findall() { //finds all unique img urls and loads them
-		for (var i of this.board["board"]) {
+		for (var i of this.board["grids"]) {
 			if (i["bg"]["type"]=="img") {
 				if (!this.srcs.includes(i["bg"]["value"])) { //only appends url if its not there
 					this.srcs.push(i["bg"]["value"])
@@ -98,7 +98,7 @@ class QUIrenderer {
 		for (var i in this.srcs) {
 			if (!this.imgs[i]) { //if not initialized
 				this.imgs[i]=await this.cache(this.srcs[i]) //awaits for img to finish
-				this.redraw(this.board["board"]) //then redraw the screen
+				this.redrawall() //then redraw the screen
 			}
 		}
 	}
@@ -128,7 +128,7 @@ class QUIrenderer {
 		}
 	}
 	redrawall() {
-		this.redraw(this.board["board"])
+		this.redraw(this.board["grids"])
 	}
 	img(url, box) { //draws img and trim
 		var imgobj=this.imgs[this.srcs.indexOf(url)] //based off of src find its respective img obj
@@ -197,21 +197,21 @@ class QUIrenderer {
 		var ret //returns the most recent board matching the cords
 
 		//for (var i=0;i<this.board["board"].length;i++) {
-		for (var i in this.board["board"]) {
+		for (var i in this.board["grids"]) {
 			//checks to see if the current mouse pos is within the current mouse grid
-			if (tempx>=this.board["board"][i]["box"][0]&&
-				tempx<this.board["board"][i]["box"][0]+this.board["board"][i]["box"][2]&&
-				tempy>=this.board["board"][i]["box"][1]&&
-				tempy<this.board["board"][i]["box"][1]+this.board["board"][i]["box"][3]) {
-				if (!("ignore" in this.board["board"][i])) { //if ignore flag is set then ignore this board
+			if (tempx>=this.board["grids"][i]["box"][0]&&
+				tempx<this.board["grids"][i]["box"][0]+this.board["grids"][i]["box"][2]&&
+				tempy>=this.board["grids"][i]["box"][1]&&
+				tempy<this.board["grids"][i]["box"][1]+this.board["grids"][i]["box"][3]) {
+				if (!("ignore" in this.board["grids"][i])) { //if ignore flag is set then ignore this board
 					ret=i //instead of getting first element that matches cords, get the last becase it is ontop of the others
 					this.currentgridid=i
 				}
 			}
 		}
 		if (ret) {
-			this.currentgrid=this.board["board"][ret]
-			return this.board["board"][ret]
+			this.currentgrid=this.board["grids"][ret]
+			return this.board["grids"][ret]
 		}
 		else {
 			return false

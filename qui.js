@@ -88,9 +88,7 @@ class QUIrenderer {
 	cache(url) { //chaches single image
 		return new Promise(function(resolve){
 			var imgobj=new Image() //make a new img obj
-			imgobj.onload=function(){ //and when it loads
-				resolve(imgobj) //return it
-			}
+			imgobj.onload=function(){ resolve(imgobj) } //and when it loads return it
 			imgobj.src=url //sets src after to make sure onload is caught
 		})
 	}
@@ -122,7 +120,7 @@ class QUIrenderer {
 		this.disp.fillRect(...box)
 	}
 	redraw(boxes) { //redraws all grids
-		for(var i=0;i<boxes.length;i++) { //for each box in the board:
+		for(var i in boxes) { //for each box in the board:
 			this.style([boxes[i]]) //draw outline
 			this.text(boxes[i]) //render text
 		}
@@ -164,7 +162,7 @@ class QUIrenderer {
 			var tempgradient=this.disp.createLinearGradient(box[0], box[1], box[0], box[1]+box[3]) //display top to bottom
 		}
 		params.shift(0) //removes the "x" or "y"
-		for (var i=0;i<params.length;i++) { //loop through all of the colors and add them to the gradient
+		for (var i in params) { //loop through all of the colors and add them to the gradient
 			tempgradient.addColorStop(1/(params.length-1)*i,params[i]) //added current color and make sure it evenly takes up space
 		}
 		this.disp.fillStyle=tempgradient

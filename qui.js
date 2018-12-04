@@ -1,19 +1,11 @@
 class QUIrenderer {
 	constructor({url=false, str=false, json=false}) {
-		if (str) { this.board=JSON.parse(str) }
-		else if (json) { this.board=json }
-		else {
-			//synchronous req is deprecated, but i need to save JSON as var
-			var tmp=new XMLHttpRequest();
-			tmp.open("GET",url, false)
-			tmp.send("")
-			this.board=JSON.parse(tmp.responseText)
-		}
-
+		this.url=url //holds url passed or false if none
+		this.str=str //holds json string or false if none
+		this.json=json //holds json obj or false if none
+		
 		this.canv=document.getElementById("c") //gets canvas and makes disp obj for displaying boxes etc
 		this.disp=this.canv.getContext("2d")
-
-		this.update() //sets initial screen size
 
 		this.resize=function() { //called on screen resize
 			this.update()
@@ -54,6 +46,23 @@ class QUIrenderer {
 	}
 	set currentgrid(box) { //when current board is set, put it into the board object
 		this.board["grids"][this.currentgridid]=box
+	}
+	async download(url) { //downloads a board from a url
+		var file=await fetch(url)
+		var board=await file.text().then(e=>{return e})
+		return JSON.parse(board)
+	}
+	async bg() {
+		if (this.str) { this.board=JSON.parse(this.str) }
+		else if (this.json) { this.board=this.json }
+		else if (this.url) {
+			//displays this board while json is being downloaded
+			this.board={"x":1,"y":1,"grids":[{"box":[0,0,1,1],"text":"Loading board...","bg":{"type":"color","value":"#fff"}}]}
+			this.redrawall()
+
+			this.board=await this.download(this.url) //downloads the json
+			this.refresh() //other init runs while the await is going, refresh after json is done
+		}
 	}
 	style(boxes) { //determines what style technique to use on baclground
 		for (var i=0;i<boxes.length;i++) {
@@ -110,16 +119,22 @@ class QUIrenderer {
 		this.disp.canvas.width=this.screenx //resizes canvas
 		this.disp.canvas.height=this.screeny
 	}
-	init() { //initializes the screen
+	refresh() { //updates, re-finds, re-caches, re-draws
+		this.update()
 		this.findall()
 		this.cacheall()
 		this.redrawall()
+	}
+	init() { //initializes the screen
+		this.bg()
+		this.refresh()
 	}
 	rect(color, box) { //draws box of certain color at given pos
 		this.disp.fillStyle=color
 		this.disp.fillRect(...box)
 	}
 	redraw(boxes) { //redraws all grids
+		this.update()
 		for(var i in boxes) { //for each box in the board:
 			this.style([boxes[i]]) //draw outline
 			this.text(boxes[i]) //render text

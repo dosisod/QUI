@@ -66,30 +66,37 @@ class QUIrenderer {
 	}
 	style(boxes) { //determines what style technique to use on baclground
 		for (var i=0;i<boxes.length;i++) {
-			if (boxes[i]["bg"]["type"]=="color") { //solid background color
-				this.rect(boxes[i]["bg"]["value"], [...this.grid(boxes[i]["box"])]) //draws background with color
-			}
-			else if (boxes[i]["bg"]["type"]=="img") { //tiled background img
-				if (this.imgs[this.srcs.indexOf(boxes[i]["bg"]["value"])]) { //
-					if (this.imgs[this.srcs.indexOf(boxes[i]["bg"]["value"])].complete) {
-						this.img(boxes[i]["bg"]["value"], [...this.grid(boxes[i]["box"])]) //draws background with image
+			if (boxes[i]["bg"]) {
+				if (boxes[i]["bg"]["type"]=="color") { //solid background color
+					this.rect(boxes[i]["bg"]["value"], [...this.grid(boxes[i]["box"])]) //draws background with color
+				}
+				else if (boxes[i]["bg"]["type"]=="img") { //tiled background img
+					if (this.imgs[this.srcs.indexOf(boxes[i]["bg"]["value"])]) { //
+						if (this.imgs[this.srcs.indexOf(boxes[i]["bg"]["value"])].complete) {
+							this.img(boxes[i]["bg"]["value"], [...this.grid(boxes[i]["box"])]) //draws background with image
+						}
 					}
 				}
-			}
-			else if (boxes[i]["bg"]["type"]=="img64") {
-				this.img64(boxes[i]["bg"]["value"], [...this.grid(boxes[i]["box"])])
-			}
-			else if (boxes[i]["bg"]["type"]=="gradient") { //color gradient
-				this.gradient(boxes[i]["bg"]["value"], [...this.grid(boxes[i]["box"])])
+				else if (boxes[i]["bg"]["type"]=="img64") {
+					this.img64(boxes[i]["bg"]["value"], [...this.grid(boxes[i]["box"])])
+				}
+				else if (boxes[i]["bg"]["type"]=="gradient") { //color gradient
+					this.gradient(boxes[i]["bg"]["value"], [...this.grid(boxes[i]["box"])])
+				}
+			else { //if bg isnt set, display white background
+				this.rect("#fff", [...this.grid(boxes[i]["box"])])
 			}
 			this.text(boxes[i]) //adds basic text formatting
+			}
 		}
 	}
 	findall() { //finds all unique img urls and loads them
 		for (var i of this.board["grids"]) {
-			if (i["bg"]["type"]=="img") {
-				if (!this.srcs.includes(i["bg"]["value"])) { //only appends url if its not there
-					this.srcs.push(i["bg"]["value"])
+			if (i["bg"]) {
+				if (i["bg"]["type"]=="img") {
+					if (!this.srcs.includes(i["bg"]["value"])) { //only appends url if its not there
+						this.srcs.push(i["bg"]["value"])
+					}
 				}
 			}
 		}

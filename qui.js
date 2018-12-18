@@ -30,6 +30,9 @@ class QUIrenderer {
 		this.mouseh=this.mouse.bind(this) //mouse handler
 		this.canv.addEventListener("click", this.mouseh, false)
 
+		window.addEventListener("scroll", function(e){console.log("123")}, false)
+		//this.canv.onscroll=function(e){console.log("123")}
+
 		this.disp.canvas.width=this.screenx //resizes canvas
 		this.disp.canvas.height=this.screeny
 
@@ -123,8 +126,17 @@ class QUIrenderer {
 		this.sizex=this.screenx/this.board["x"] //size of each individual box in grid
 		this.sizey=this.screeny/this.board["y"]
 		
+		//this.disp.canvas.width=this.screenx //resizes canvas
+		//this.disp.canvas.height=this.screeny
+
+		var maxsize=this.sizey //makes canv height as long as it needs
+		for (var i of this.board["grids"])
+			if ((i["box"][1]+i["box"][3])*this.sizey>maxsize)
+				maxsize=(i["box"][1]+i["box"][3])*this.sizey
+				
 		this.disp.canvas.width=this.screenx //resizes canvas
-		this.disp.canvas.height=this.screeny
+		this.disp.canvas.height=maxsize
+		console.log(maxsize)
 	}
 	refresh() { //updates, re-finds, re-caches, re-draws
 		this.update()
@@ -210,6 +222,9 @@ class QUIrenderer {
 	action(str) { //runs JS code from string
 		this.currentaction=new Function(str) //sets function as attribue so it has access to class
 		return(this.currentaction())
+	}
+	scrolled() { //TODO: Add scrolling
+		console.log()
 	}
 	clicked() { //finds out what grid was clicked based off mouse pos
 		var tempx=~~(this.mousex/this.sizex) //finds what grid cordinates of the mouse are

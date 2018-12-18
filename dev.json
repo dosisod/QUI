@@ -1,0 +1,12 @@
+{
+	"x":1,
+	"y":1,
+	"grids": [
+		{"box":[0,0,1,1],
+		"text":"1",
+		"bg":{"type":"color","value":"#f00"}},
+		{"box":[0,1,1,1],
+		"text":"2",
+		"bg":{"type":"color","value":"#0f0"}}
+	]
+}

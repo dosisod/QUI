@@ -5,12 +5,11 @@
 }
 canvas {
 	image-rendering: pixelated;
-	overflow: hidden;
 }
 html, body, c# {
 	width: 100%;
 	height: 100%;
 }
-c# {
-	overflow: hidden;
+body {
+	overflow-x: hidden;
 }

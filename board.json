@@ -1,7 +1,7 @@
 {
 	"x":4,
 	"y":6,
-	"board": [
+	"grids": [
 		{"box":[0,0,4,6],
 		"bg":{"type":"img","value":"sprite.png"}},
 		{"box":[0,0,4,1],

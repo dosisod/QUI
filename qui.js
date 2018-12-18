@@ -223,9 +223,6 @@ class QUIrenderer {
 		this.currentaction=new Function(str) //sets function as attribue so it has access to class
 		return(this.currentaction())
 	}
-	scrolled() { //TODO: Add scrolling
-		console.log()
-	}
 	clicked() { //finds out what grid was clicked based off mouse pos
 		var tempx=~~(this.mousex/this.sizex) //finds what grid cordinates of the mouse are
 		var tempy=~~(this.mousey/this.sizey) //

@@ -17,7 +17,7 @@ class QUIrenderer {
 		this.mousex=0
 		this.mousey=0
 
-		this.mouse=function(e){ //ran when mouse is clicked
+		this.mouse=function(e) { //ran when mouse is clicked
 			this.mousex=e.clientX
 			this.mousey=e.clientY
 			this.tempgrid=this.clicked() //stores current grid
@@ -30,13 +30,20 @@ class QUIrenderer {
 		this.mouseh=this.mouse.bind(this) //mouse handler
 		this.canv.addEventListener("click", this.mouseh, false)
 
+		this.scroll=function(e) {
+			this.scrolly=e.pageY
+		}
+
+		this.scrollh=this.scroll.bind(this)
+		window.addEventListener("scroll", this.scrollh, false)
+
 		this.disp.canvas.width=this.screenx //resizes canvas
 		this.disp.canvas.height=this.screeny
 
 		this.srcs=[] //stores all urls to be loaded into cache
 		this.imgs=[] //image objs that load the images
 
-		this.yscroll=0 //amount that the page has been scrolled
+		this.scrolly=0 //amount that the page has been scrolled
 		
 		this.currentgridid=undefined //current index of this.board["board"]
 		this._currentgrid=undefined //undefined getter+setter obj
@@ -123,8 +130,13 @@ class QUIrenderer {
 		this.sizex=this.screenx/this.board["x"] //size of each individual box in grid
 		this.sizey=this.screeny/this.board["y"]
 		
+		var maxsize=this.sizey //makes canv height as long as it needs
+		for (var i of this.board["grids"])
+			if ((i["box"][1]+i["box"][3])*this.sizey>maxsize)
+				maxsize=(i["box"][1]+i["box"][3])*this.sizey
+				
 		this.disp.canvas.width=this.screenx //resizes canvas
-		this.disp.canvas.height=this.screeny
+		this.disp.canvas.height=maxsize
 	}
 	refresh() { //updates, re-finds, re-caches, re-draws
 		this.update()
@@ -210,6 +222,9 @@ class QUIrenderer {
 	action(str) { //runs JS code from string
 		this.currentaction=new Function(str) //sets function as attribue so it has access to class
 		return(this.currentaction())
+	}
+	scrolled() { //TODO: Add scrolling
+		console.log()
 	}
 	clicked() { //finds out what grid was clicked based off mouse pos
 		var tempx=~~(this.mousex/this.sizex) //finds what grid cordinates of the mouse are

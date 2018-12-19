@@ -225,7 +225,7 @@ class QUIrenderer {
 	}
 	clicked() { //finds out what grid was clicked based off mouse pos
 		var tempx=~~(this.mousex/this.sizex) //finds what grid cordinates of the mouse are
-		var tempy=~~(this.mousey/this.sizey) //
+		var tempy=~~((this.mousey+this.scrolly)/this.sizey) //
 		var ret //returns the most recent board matching the cords
 
 		//for (var i=0;i<this.board["board"].length;i++) {

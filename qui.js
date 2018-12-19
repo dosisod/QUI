@@ -7,17 +7,16 @@ class QUIrenderer {
 		this.canv=document.getElementById("c") //gets canvas and makes disp obj for displaying boxes etc
 		this.disp=this.canv.getContext("2d")
 
-		this.resize=function() { //called on screen resize
+		this.resize=()=>{ //called on screen resize
 			this.update()
 			this.redrawall()
 		}
-		this.resizeh=this.resize.bind(this) //resize handler
-		window.addEventListener("resize", this.resizeh, false) //added to window to get when any resizing is done
+		window.addEventListener("resize", this.resize, false) //added to window to get when any resizing is done
 
 		this.mousex=0
 		this.mousey=0
 
-		this.mouse=function(e) { //ran when mouse is clicked
+		this.mouse=(e)=>{ //ran when mouse is clicked
 			this.mousex=e.clientX
 			this.mousey=e.clientY
 			this.tempgrid=this.clicked() //stores current grid
@@ -26,16 +25,12 @@ class QUIrenderer {
 				this.action(this.tempgrid["action"]) //runs JS code from clicked on grid
 			}
 		}
+		this.canv.addEventListener("click", this.mouse, false)
 
-		this.mouseh=this.mouse.bind(this) //mouse handler
-		this.canv.addEventListener("click", this.mouseh, false)
-
-		this.scroll=function(e) {
+		this.scroll=(e)=>{
 			this.scrolly=e.pageY
 		}
-
-		this.scrollh=this.scroll.bind(this)
-		window.addEventListener("scroll", this.scrollh, false)
+		window.addEventListener("scroll", this.scroll, false)
 
 		this.disp.canvas.width=this.screenx //resizes canvas
 		this.disp.canvas.height=this.screeny

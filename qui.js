@@ -218,6 +218,10 @@ class QUIrenderer {
 		this.currentaction=new Function(str) //sets function as attribue so it has access to class
 		return(this.currentaction())
 	}
+	sideload(board) { //replaces board with new board
+		this.json=board
+		this.init()
+	}
 	clicked() { //finds out what grid was clicked based off mouse pos
 		var tempx=~~(this.mousex/this.sizex) //finds what grid cordinates of the mouse are
 		var tempy=~~((this.mousey+this.scrolly)/this.sizey) //

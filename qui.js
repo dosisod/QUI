@@ -222,6 +222,10 @@ class QUIrenderer {
 		this.json=board
 		this.init()
 	}
+	back() { //goes back to previously used board TODO: make a history for boards
+		this.json=this.history[this.history.length-1]
+		this.init()
+	}
 	clicked() { //finds out what grid was clicked based off mouse pos
 		var tempx=~~(this.mousex/this.sizex) //finds what grid cordinates of the mouse are
 		var tempy=~~((this.mousey+this.scrolly)/this.sizey) //

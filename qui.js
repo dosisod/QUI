@@ -42,6 +42,9 @@ class QUIrenderer {
 		
 		this.currentgridid=undefined //current index of this.board["board"]
 		this._currentgrid=undefined //undefined getter+setter obj
+
+		this.history=[] //stores a history of previous boards
+		this.historyid=0 //stores where in history the user is
 	}
 	get currentgrid() { //when current board requesting board, grab current instance
 		return this.board["grids"][this.currentgridid]
@@ -219,11 +222,25 @@ class QUIrenderer {
 		return(this.currentaction())
 	}
 	sideload(board) { //replaces board with new board
+		this.history.splice(this.historyid) //removes the ability to go forward
+		this.history[this.historyid]=this.board
+		this.history[this.historyid+1]=board
+		this.historyid++
+		
 		this.json=board
 		this.init()
 	}
-	back() { //goes back to previously used board TODO: make a history for boards
+	back() { //goes back to previously used board
+		this.historyid--
+		
 		this.json=this.history[this.history.length-1]
+		this.init()
+	}
+	forward() { //undoes back
+		if (this.historyid=this.history.length) return //do nothing if youre already at the most recent board
+		
+		this.historyid++ //if not, move one up
+		this.json=this.history[this.history.length-1] //then replace board
 		this.init()
 	}
 	clicked() { //finds out what grid was clicked based off mouse pos

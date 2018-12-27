@@ -231,15 +231,16 @@ class QUIrenderer {
 		this.init()
 	}
 	back() { //goes back to previously used board
+		if (this.historyid<=0) return //dont go back if its impossible
 		this.historyid--
 		
-		this.json=this.history[this.history.length-1]
+		this.json=this.history[this.history.length-2]
 		this.init()
 	}
 	forward() { //undoes back
 		if (this.historyid=this.history.length) return //do nothing if youre already at the most recent board
-		
 		this.historyid++ //if not, move one up
+		
 		this.json=this.history[this.history.length-1] //then replace board
 		this.init()
 	}

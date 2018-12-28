@@ -27,9 +27,8 @@ class QUIrenderer {
 		}
 		this.canv.addEventListener("click", this.mouse, false)
 
-		this.scroll=(e)=>{
-			this.scrolly=e.pageY
-		}
+		this.scroll=(e)=>this.scrolly=e.pageY
+		
 		window.addEventListener("scroll", this.scroll, false)
 
 		this.disp.canvas.width=this.screenx //resizes canvas
@@ -58,8 +57,8 @@ class QUIrenderer {
 		return JSON.parse(board)
 	}
 	async bg() {
-		if (this.str) { this.board=JSON.parse(this.str) }
-		else if (this.json) { this.board=this.json }
+		if (this.str) this.board=JSON.parse(this.str)
+		else if (this.json) this.board=this.json
 		else if (this.url) {
 			//displays this board while json is being downloaded
 			this.board={"x":1,"y":1,"grids":[{"box":[0,0,1,1],"text":"Loading board...","bg":{"type":"color","value":"#fff"}}]}
@@ -70,7 +69,7 @@ class QUIrenderer {
 		}
 	}
 	style(boxes) { //determines what style technique to use on baclground
-		for (var i=0;i<boxes.length;i++) {
+		for (var i in boxes) {
 			if (boxes[i]["bg"]) {
 				if (boxes[i]["bg"]["type"]=="color") { //solid background color
 					this.rect(boxes[i]["bg"]["value"], [...this.grid(boxes[i]["box"])]) //draws background with color
@@ -107,9 +106,10 @@ class QUIrenderer {
 		}
 	}
 	cache(url) { //chaches single image
-		return new Promise(function(resolve){
+		//return new Promise(function(resolve){
+		return new Promise((resolve)=>{
 			var imgobj=new Image() //make a new img obj
-			imgobj.onload=function(){ resolve(imgobj) } //and when it loads return it
+			imgobj.onload=()=>resolve(imgobj) //and when it loads return it
 			imgobj.src=url //sets src after to make sure onload is caught
 		})
 	}

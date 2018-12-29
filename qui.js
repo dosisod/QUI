@@ -67,6 +67,8 @@ class QUIrenderer {
 			this.board=await this.download(this.url) //downloads the json
 			this.refresh() //other init runs while the await is going, refresh after json is done
 		}
+		//action key inside of root json will be ran on start
+		if (this.board.hasOwnProperty("action")) this.action(this.board["action"])
 	}
 	style(boxes) { //determines what style technique to use on baclground
 		for (var i in boxes) {

@@ -58,3 +58,10 @@ Many other background options are available, formattings are listed below:
 "bg":{"type":"gradient","value":"X #f00 #0f0 #00f"} //horizontal rainbow
 "bg":{"type":"gradient","value":"Y #000 #fff"} //vertical fade to white
 ```
+
+Other options that may be useful (do these where the `"x"` and such are)
+
+```javascript
+"cursor":"http://0.0.0.0/img.png" //changes current cursor, must include http(s)
+"action":"/*js here*/" //runs this js code on load
+```

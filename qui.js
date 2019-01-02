@@ -69,6 +69,7 @@ class QUIrenderer {
 		}
 		//action key inside of root json will be ran on start
 		if (this.board.hasOwnProperty("action")) this.action(this.board["action"])
+		if (this.board.hasOwnProperty("cursor")) this.canv.style.cursor="url("+this.board["cursor"]+"), pointer"
 	}
 	style(boxes) { //determines what style technique to use on baclground
 		for (var i in boxes) {

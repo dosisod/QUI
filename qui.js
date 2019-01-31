@@ -21,14 +21,12 @@ class QUIrenderer {
 			this.mousey=e.clientY
 			this.tempgrid=this.clicked() //stores current grid
 
-			if (this.tempgrid) {
+			if (this.tempgrid)
 				this.action(this.tempgrid["action"]) //runs JS code from clicked on grid
-			}
 		}
 		this.canv.addEventListener("click", this.mouse, false)
 
 		this.scroll=(e)=>this.scrolly=e.pageY
-		
 		window.addEventListener("scroll", this.scroll, false)
 
 		this.disp.canvas.width=this.screenx //resizes canvas
@@ -74,42 +72,33 @@ class QUIrenderer {
 	style(boxes) { //determines what style technique to use on baclground
 		for (var i in boxes) {
 			if (boxes[i]["bg"]) {
-				if (boxes[i]["bg"]["type"]=="color") { //solid background color
+				if (boxes[i]["bg"]["type"]=="color") //solid background color
 					this.rect(boxes[i]["bg"]["value"], [...this.grid(boxes[i]["box"])]) //draws background with color
-				}
-				else if (boxes[i]["bg"]["type"]=="img") { //tiled background img
-					if (this.imgs[this.srcs.indexOf(boxes[i]["bg"]["value"])]) { //
-						if (this.imgs[this.srcs.indexOf(boxes[i]["bg"]["value"])].complete) {
+					
+				else if (boxes[i]["bg"]["type"]=="img") //tiled background img
+					if (this.imgs[this.srcs.indexOf(boxes[i]["bg"]["value"])])
+						if (this.imgs[this.srcs.indexOf(boxes[i]["bg"]["value"])].complete)
 							this.img(boxes[i]["bg"]["value"], [...this.grid(boxes[i]["box"])]) //draws background with image
-						}
-					}
-				}
-				else if (boxes[i]["bg"]["type"]=="img64") {
+							
+				else if (boxes[i]["bg"]["type"]=="img64")
 					this.img64(boxes[i]["bg"]["value"], [...this.grid(boxes[i]["box"])])
-				}
-				else if (boxes[i]["bg"]["type"]=="gradient") { //color gradient
+					
+				else if (boxes[i]["bg"]["type"]=="gradient") //color gradient
 					this.gradient(boxes[i]["bg"]["value"], [...this.grid(boxes[i]["box"])])
-				}
-			else { //if bg isnt set, display white background
+			}
+			else //if bg isnt set, display white background
 				this.rect("#fff", [...this.grid(boxes[i]["box"])])
-			}
+				
 			this.text(boxes[i]) //adds basic text formatting
-			}
 		}
 	}
 	findall() { //finds all unique img urls and loads them
-		for (var i of this.board["grids"]) {
-			if (i["bg"]) {
-				if (i["bg"]["type"]=="img") {
-					if (!this.srcs.includes(i["bg"]["value"])) { //only appends url if its not there
-						this.srcs.push(i["bg"]["value"])
-					}
-				}
-			}
-		}
+		for (var i of this.board["grids"])
+			if (i["bg"]["type"]=="img")
+				if (!this.srcs.includes(i["bg"]["value"])) //only appends url if its not there
+					this.srcs.push(i["bg"]["value"])
 	}
 	cache(url) { //chaches single image
-		//return new Promise(function(resolve){
 		return new Promise((resolve)=>{
 			var imgobj=new Image() //make a new img obj
 			imgobj.onload=()=>resolve(imgobj) //and when it loads return it
@@ -190,16 +179,15 @@ class QUIrenderer {
 		params[0]=params[0].toLowerCase() //converts the "X" or "Y" to lowercase
 
 		//makes a new gradient pattern obj
-		if (params[0]=="x") {
+		if (params[0]=="x")
 			var tempgradient=this.disp.createLinearGradient(box[0], box[1], box[0]+box[2], box[1]) //display left to right
-		}
-		else if (params[0]=="y") {
+			
+		else if (params[0]=="y")
 			var tempgradient=this.disp.createLinearGradient(box[0], box[1], box[0], box[1]+box[3]) //display top to bottom
-		}
+			
 		params.shift(0) //removes the "x" or "y"
-		for (var i in params) { //loop through all of the colors and add them to the gradient
+		for (var i in params) //loop through all of the colors and add them to the gradient
 			tempgradient.addColorStop(1/(params.length-1)*i,params[i]) //added current color and make sure it evenly takes up space
-		}
 		this.disp.fillStyle=tempgradient
 		this.disp.fillRect(...box)
 	}
@@ -216,9 +204,8 @@ class QUIrenderer {
 			this.disp.font=tempfont[0]+" "+tempfont[1] //takes first 2 params as font size and font face
 			this.disp.fillStyle=tempfont[2] //takes 3rd param as font color
 		}
-		if (box["text"]) { //makes sure there is text to print
+		if (box["text"]) //makes sure there is text to print
 			this.disp.fillText(box["text"], box["box"][0]*this.sizex, (box["box"][1]*this.sizey)+tempsize+2)
-		}
 	}
 	action(str) { //runs JS code from string
 		this.currentaction=new Function(str) //sets function as attribue so it has access to class
@@ -252,7 +239,6 @@ class QUIrenderer {
 		var tempy=~~((this.mousey+this.scrolly)/this.sizey) //
 		var ret //returns the most recent board matching the cords
 
-		//for (var i=0;i<this.board["board"].length;i++) {
 		for (var i in this.board["grids"]) {
 			//checks to see if the current mouse pos is within the current mouse grid
 			if (tempx>=this.board["grids"][i]["box"][0]&&
@@ -269,9 +255,7 @@ class QUIrenderer {
 			this.currentgrid=this.board["grids"][ret]
 			return this.board["grids"][ret]
 		}
-		else {
-			return false
-		}
+		else return false
 	}
 	grid(box) { //returns cords for grid based on grid size and screen size
 		return [box[0]*this.sizex,box[1]*this.sizey,box[2]*this.sizex,box[3]*this.sizey]

@@ -16,17 +16,16 @@ class QUIrenderer {
 		this.mousex=0
 		this.mousey=0
 
-		this.mouse=(e)=>{ //ran when mouse is clicked
+		this.mouse=e=>{ //ran when mouse is clicked
 			this.mousex=e.clientX
 			this.mousey=e.clientY
 			this.tempgrid=this.clicked() //stores current grid
 
-			if (this.tempgrid)
-				this.action(this.tempgrid["action"]) //runs JS code from clicked on grid
+			if (this.tempgrid) this.action(this.tempgrid["action"]) //runs JS code from clicked on grid
 		}
 		this.canv.addEventListener("click", this.mouse, false)
 
-		this.scroll=(e)=>this.scrolly=e.pageY
+		this.scroll=e=>this.scrolly=e.pageY
 		window.addEventListener("scroll", this.scroll, false)
 
 		this.disp.canvas.width=this.screenx //resizes canvas
@@ -86,8 +85,9 @@ class QUIrenderer {
 				else if (boxes[i]["bg"]["type"]=="gradient") //color gradient
 					this.gradient(boxes[i]["bg"]["value"], [...this.grid(boxes[i]["box"])])
 			}
-			else //if bg isnt set, display white background
-				this.rect("#fff", [...this.grid(boxes[i]["box"])])
+			//if bg isnt set, display white background
+			else this.rect("#fff", [...this.grid(boxes[i]["box"])])
+				
 				
 			this.text(boxes[i]) //adds basic text formatting
 		}
@@ -144,7 +144,7 @@ class QUIrenderer {
 	}
 	redraw(boxes) { //redraws all grids
 		this.update()
-		for(var i in boxes) { //for each box in the board:
+		for (var i in boxes) { //for each box in the board:
 			this.style([boxes[i]]) //draw outline
 			this.text(boxes[i]) //render text
 		}

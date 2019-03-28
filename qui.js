@@ -13,8 +13,7 @@ class QUIrenderer {
 		}
 		window.addEventListener("resize", this.resize, false) //added to window to get when any resizing is done
 
-		this.mousex=0
-		this.mousey=0
+		this.mousex=this.mousey=0
 
 		this.mouse=e=>{ //ran when mouse is clicked
 			this.mousex=e.clientX
@@ -87,8 +86,7 @@ class QUIrenderer {
 			}
 			//if bg isnt set, display white background
 			else this.rect("#fff", [...this.grid(boxes[i]["box"])])
-				
-				
+			
 			this.text(boxes[i]) //adds basic text formatting
 		}
 	}
@@ -109,9 +107,9 @@ class QUIrenderer {
 		for (var i in this.srcs) {
 			if (!this.imgs[i]) { //if not initialized
 				this.imgs[i]=await this.cache(this.srcs[i]) //awaits for img to finish
-				this.redrawall() //then redraw the screen
 			}
 		}
+		this.redrawall() //then redraw the screen
 	}
 	update() { //called when screen size changes
 		this.screenx=window.innerWidth

@@ -68,26 +68,26 @@ class QUIrenderer {
 		if (this.board.hasOwnProperty("cursor")) this.canv.style.cursor="url("+this.board["cursor"]+"), pointer"
 	}
 	style(boxes) { //determines what style technique to use on baclground
-		for (var i in boxes) {
-			if (boxes[i]["bg"]) {
-				if (boxes[i]["bg"]["type"]=="color") //solid background color
-					this.rect(boxes[i]["bg"]["value"], [...this.grid(boxes[i]["box"])]) //draws background with color
+		for (var box of boxes) {
+			if (box["bg"]) {
+				if (box["bg"]["type"]=="color") //solid background color
+					this.rect(box["bg"]["value"], this.grid(box["box"])) //draws background with color
 					
-				else if (boxes[i]["bg"]["type"]=="img") //tiled background img
-					if (this.imgs[this.srcs.indexOf(boxes[i]["bg"]["value"])])
-						if (this.imgs[this.srcs.indexOf(boxes[i]["bg"]["value"])].complete)
-							this.img(boxes[i]["bg"]["value"], [...this.grid(boxes[i]["box"])]) //draws background with image
+				else if (box["bg"]["type"]=="img") //tiled background img
+					if (this.imgs[this.srcs.indexOf(box["bg"]["value"])])
+						if (this.imgs[this.srcs.indexOf(box["bg"]["value"])].complete)
+							this.img(box["bg"]["value"], this.grid(box["box"])) //draws background with image
 							
-				else if (boxes[i]["bg"]["type"]=="img64")
-					this.img64(boxes[i]["bg"]["value"], [...this.grid(boxes[i]["box"])])
+				else if (box["bg"]["type"]=="img64")
+					this.img64(box["bg"]["value"], this.grid(box["box"]))
 					
-				else if (boxes[i]["bg"]["type"]=="gradient") //color gradient
-					this.gradient(boxes[i]["bg"]["value"], [...this.grid(boxes[i]["box"])])
+				else if (box["bg"]["type"]=="gradient") //color gradient
+					this.gradient(box["bg"]["value"], this.grid(box["box"]))
 			}
 			//if bg isnt set, display white background
-			else this.rect("#fff", [...this.grid(boxes[i]["box"])])
+			else this.rect("#fff", [...this.grid(box["box"])])
 			
-			this.text(boxes[i]) //adds basic text formatting
+			this.text(box) //adds basic text formatting
 		}
 	}
 	findall() { //finds all unique img urls and loads them
